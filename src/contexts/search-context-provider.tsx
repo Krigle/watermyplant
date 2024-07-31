@@ -4,8 +4,8 @@ import { Plant } from "@/lib/types";
 import {
   createContext,
   useContext,
-  useEffect,
   useState,
+  useEffect,
   ReactNode,
 } from "react";
 
@@ -18,6 +18,8 @@ type TSearchContext = {
   searchQuery: string;
   handleChangeSearchQuery: (newValue: string) => void;
   results: Plant[];
+  isDropdownVisible: boolean;
+  setIsDropdownVisible: (visible: boolean) => void;
 };
 
 export const SearchContext = createContext<TSearchContext | null>(null);
@@ -28,18 +30,18 @@ export default function SearchContextProvider({
 }: SearchContextProviderProps) {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [results, setResults] = useState<Plant[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isDropdownVisible, setIsDropdownVisible] = useState<boolean>(false);
 
   useEffect(() => {
     if (searchQuery.length > 0) {
-      setIsLoading(true);
       const filteredResults = initialData.filter((plant) =>
         plant.common_name.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setResults(filteredResults);
-      setIsLoading(false);
+      setIsDropdownVisible(true);
     } else {
-      setResults(initialData);
+      setResults([]);
+      setIsDropdownVisible(false);
     }
   }, [searchQuery, initialData]);
 
@@ -53,9 +55,20 @@ export default function SearchContextProvider({
         searchQuery,
         handleChangeSearchQuery,
         results,
+        isDropdownVisible,
+        setIsDropdownVisible,
       }}
     >
       {children}
     </SearchContext.Provider>
   );
+}
+
+// Custom hook to use the SearchContext
+export function useSearchContext() {
+  const context = useContext(SearchContext);
+  if (!context) {
+    throw new Error("useSearchContext must be used within a SearchContextProvider");
+  }
+  return context;
 }
