@@ -2,11 +2,32 @@
 import { useSearchContext, usePlantContext } from "@/lib/hooks";
 import { Search } from "lucide-react";
 import SearchResultsDropdown from "./search-results-dropdown";
+import { useEffect, useRef } from "react";
 
 export default function PlantSearchBar() {
   const { results, searchQuery, handleChangeSearchQuery } = useSearchContext();
   const { handleAddPlant } = usePlantContext();
+  const dropdownRef = useRef(null);
 
+  // Handle click outside the dropdown to close it
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        (dropdownRef.current as HTMLElement).contains(event.target as Node)
+      ) {
+        // If clicked outside the dropdown, clear the search query
+        handleChangeSearchQuery("");
+      }
+    };
+
+    // Add event listener to detect clicks outside
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Clean up the event listener on component unmount
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [handleChangeSearchQuery]);
   return (
     <div className="relative w-[500px] h-12">
       <form
@@ -29,9 +50,14 @@ export default function PlantSearchBar() {
           <Search size={24} />
         </button>
       </form>
-      {searchQuery.length > 0 && (
-        <SearchResultsDropdown results={results} onAddPlant={handleAddPlant} />
-      )}
+      <div ref={dropdownRef}>
+        {searchQuery.length > 0 && (
+          <SearchResultsDropdown
+            results={results}
+            onAddPlant={handleAddPlant}
+          />
+        )}
+      </div>
     </div>
   );
 }
