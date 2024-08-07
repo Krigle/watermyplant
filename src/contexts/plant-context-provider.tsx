@@ -36,6 +36,10 @@ export default function PlantContextProvider({
   const [selectedPlantId, setSelectedPlantId] = useState<number | null>(null);
   const [myPlants, setMyPlants] = useState<Plant[]>([]);
   const [watered, setWatered] = useState<boolean>(false);
+  const [note, setNote] = useState<string>("");
+  // const [notes, setNotes] = useState<string[]>(selectedPlant?.note || []);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   //Derived State
 
@@ -76,6 +80,10 @@ export default function PlantContextProvider({
 
   const toggleWatered = () => {
     setWatered((prev) => !prev);
+  };
+
+  const handleAddNote = async (note: string) => {
+    setNotes(note);
   };
 
   return (
