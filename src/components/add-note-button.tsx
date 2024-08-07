@@ -1,15 +1,27 @@
-import { DialogContent, DialogTitle } from "@radix-ui/react-dialog";
+"use client";
+
 import { Button } from "./ui/button";
-import { Dialog, DialogHeader, DialogTrigger } from "./ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
 import PlantNoteForm from "./plant-note-form";
 import { usePlantContext } from "@/lib/hooks";
+import { useState } from "react";
 
 export default function AddNoteButton() {
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const { selectedPlant } = usePlantContext()!;
   return (
-    <Dialog>
+    <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
       <DialogTrigger>
-        <Button className="bg-[#FCFAF4] text-[#318F9A] hover:bg-[#FCFAF4]">
+        <Button
+          className="bg-[#FCFAF4] text-[#318F9A] hover:bg-[#FCFAF4]"
+          onClick={() => setIsFormOpen(true)}
+        >
           Add Note
         </Button>
       </DialogTrigger>
@@ -17,7 +29,7 @@ export default function AddNoteButton() {
         <DialogHeader>
           <DialogTitle>Add Note For {selectedPlant?.common_name}</DialogTitle>
         </DialogHeader>
-        <PlantNoteForm />
+        <PlantNoteForm onFormSubmission={() => setIsFormOpen(false)} />
       </DialogContent>
     </Dialog>
   );
