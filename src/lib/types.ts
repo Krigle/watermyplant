@@ -21,6 +21,7 @@ export interface Plant {
   watering: string;
   sunlight: string[];
   default_image: PlantImage;
+  notes: PlantNote[];
 }
 
 // Type for the API response
@@ -32,4 +33,11 @@ export interface PlantApiResponse {
   from: number;
   last_page: number;
   total: number;
+}
+
+// Type for notes on a plant
+export interface PlantNote {
+  date: string;
+  note: string;
+  id: string;
 }

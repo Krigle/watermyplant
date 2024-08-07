@@ -1,6 +1,6 @@
 "use client";
 
-import { Plant } from "@/lib/types";
+import { Plant, PlantNote } from "@/lib/types"; // Import the correct types
 import { createContext, useState, useContext } from "react";
 
 type PlantContextProviderProps = {
@@ -17,8 +17,13 @@ type TPlantContext = {
   handleAddPlant: (plant: Plant) => void;
   myPlants: Plant[];
   watered: boolean;
-  toggleWatered: () => void; // Changed from isWatered to toggleWatered
+  toggleWatered: () => void;
   handleDeletePlant: (id: number) => void;
+  handleAddNote: (note: Omit<PlantNote, "id">) => void; // Note should be of type PlantNote
+  notes: PlantNote[]; // Note array should be of type PlantNote[]
+  isLoading: boolean;
+  error: string | null;
+  handleDeleteNote: (id: string) => void;
 };
 
 export const PlantContext = createContext<TPlantContext | null>(null);
@@ -27,30 +32,30 @@ export default function PlantContextProvider({
   data,
   children,
 }: PlantContextProviderProps) {
+  // Ensure each plant has a notes property
+  const initialData = data.map((plant) => ({
+    ...plant,
+    notes: plant.notes ?? [], // Initialize notes to an empty array if undefined
+  }));
+
   const [plants, setPlants] = useState<Plant[]>(
-    Array.isArray(data) ? data : []
+    Array.isArray(initialData) ? initialData : []
   );
 
-  //State
-
+  // State
   const [selectedPlantId, setSelectedPlantId] = useState<number | null>(null);
   const [myPlants, setMyPlants] = useState<Plant[]>([]);
   const [watered, setWatered] = useState<boolean>(false);
+  const [notes, setNotes] = useState<PlantNote[]>([]); // Initialize notes as empty array
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-  //Derived State
-
-  const selectedPlant = Array.isArray(plants)
-    ? plants.find((plant) => plant.id === selectedPlantId)
-    : undefined;
-
-  if (selectedPlantId !== null && !selectedPlant) {
-    throw new Error(`Plant with ID ${selectedPlantId} not found`);
-  }
+  // Derived State
+  const selectedPlant = plants.find((plant) => plant.id === selectedPlantId);
 
   const userPlantStats = myPlants.length;
 
-  //Event Handlers
-
+  // Event Handlers
   const handleChangeSelectedPlantId = (id: number) => {
     setSelectedPlantId(id);
   };
@@ -78,6 +83,44 @@ export default function PlantContextProvider({
     setWatered((prev) => !prev);
   };
 
+  const generateUniqueId = () => {
+    return Date.now() + Math.random().toString(36).substr(2, 9);
+  };
+
+  const handleAddNote = (note: Omit<PlantNote, "id">) => {
+    if (selectedPlant) {
+      const newNote: PlantNote = {
+        ...note,
+        id: generateUniqueId(),
+      };
+      const updatedPlantNotes = {
+        ...selectedPlant,
+        notes: [...(selectedPlant.notes || []), newNote], // Ensure notes is an array
+      };
+      setPlants(
+        plants.map((plant) =>
+          plant.id === selectedPlant.id ? updatedPlantNotes : plant
+        )
+      );
+      setNotes(updatedPlantNotes.notes); // Update the notes state
+    }
+  };
+
+  const handleDeleteNote = (id: string) => {
+    if (selectedPlant) {
+      const updatedPlantNotes = {
+        ...selectedPlant,
+        notes: selectedPlant.notes?.filter((note) => note.id !== id) || [], // Ensure notes is an array
+      };
+      setPlants(
+        plants.map((plant) =>
+          plant.id === selectedPlant.id ? updatedPlantNotes : plant
+        )
+      );
+      setNotes(updatedPlantNotes.notes); // Update the notes state
+    }
+  };
+
   return (
     <PlantContext.Provider
       value={{
@@ -91,6 +134,11 @@ export default function PlantContextProvider({
         watered,
         toggleWatered,
         handleDeletePlant,
+        handleAddNote,
+        notes,
+        isLoading,
+        error,
+        handleDeleteNote,
       }}
     >
       {children}

@@ -3,18 +3,11 @@
 import Image from "next/image";
 import { Droplet, Sprout } from "lucide-react";
 import { usePlantContext } from "@/lib/hooks";
-import { Button } from "./ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog";
-import PlantNoteForm from "./plant-note-form";
+import AddNoteButton from "./add-note-button";
+import NoteDisplayIcon from "./note-display-icon";
 
 export default function MyPlantsDetails() {
-  const { selectedPlant, watered, toggleWatered } = usePlantContext()!;
+  const { selectedPlant, watered, toggleWatered, notes } = usePlantContext()!;
 
   return (
     <>
@@ -50,7 +43,7 @@ export default function MyPlantsDetails() {
           </section>
 
           <section className="flex flex-row">
-            <div className="flex flex-col space-y-3 justify-evenly py-10 px-5 bg-[#fefefe]/75 backdrop-blur-lg transition-all">
+            <div className="flex flex-col space-y-3 justify-evenly py-10 px-5 bg-[#fefefe]/75 backdrop-blur-lg transition-all flex-1">
               <div className="mr-10">
                 <div className="mb-2">
                   <h3 className="text-lg font-semibold">
@@ -95,31 +88,17 @@ export default function MyPlantsDetails() {
               </div>
             </div>
 
-            <div className="flex-1 text-center bg-[#fefefe]/75 backdrop-blur-lg transition-all px-7 py-5 border border-black">
-              <Dialog>
-                <DialogTrigger>
-                  <Button className="bg-[#FCFAF4] text-[#318F9A] hover:bg-[#FCFAF4]">
-                    Add Note
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Add Note</DialogTitle>
-                  </DialogHeader>
-                  <PlantNoteForm />
-                </DialogContent>
-              </Dialog>
+            <div className="flex flex-col justify-start items-center flex-1 bg-[#fefefe]/75 backdrop-blur-lg transition-all px-7 py-5 ">
+              <AddNoteButton />
+              {notes.length > 0 && <NoteDisplayIcon />}
             </div>
           </section>
 
           <section className="flex-1 text-center bg-[#fefefe]/75 backdrop-blur-lg transition-all px-7 py-5">
-            <div>Post pictures / Feed Component</div>
+            {/* <div>Post pictures / Feed Component</div> */}
           </section>
         </section>
       ) : null}
     </>
   );
 }
-
-// Clean up this component by making seperate components for each section within this file. Pass the props to each component and type them as props
-// vid 286

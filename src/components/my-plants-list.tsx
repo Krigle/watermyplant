@@ -24,7 +24,7 @@ export default function MyPlantsList() {
           <div className="flex items-center justify-between p-1">
             <button
               className={cn("flex items-center w-full text-base gap-3", {
-                "bg-[#9eb9c0]": selectedPlantId === plant.id,
+                "bg-[#9eb9c0]/50": selectedPlantId === plant.id,
               })}
               onClick={() => handleChangeSelectedPlantId(plant.id)}
             >
