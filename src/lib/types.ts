@@ -1,6 +1,6 @@
 // Type for the image information
-interface PlantImage {
-  image_id: number;
+export interface PlantImage {
+  id: number;
   license: number;
   license_name: string;
   license_url: string;
@@ -11,17 +11,24 @@ interface PlantImage {
   thumbnail: string;
 }
 
+// Type for notes on a plant
+export interface PlantNote {
+  date: string;
+  note: string;
+  id: string;
+}
+
 // Type for a single plant
 export interface Plant {
   id: number;
   common_name: string;
-  scientific_name: string[];
-  other_name: string[] | null;
+  scientific_name: string; // Array of scientific names
+  other_name: string | null; // Optional array of other names
   cycle: string;
   watering: string;
-  sunlight: string[];
-  default_image: PlantImage;
-  notes: PlantNote[];
+  sunlight: string[]; // Array of sunlight requirements
+  default_image: PlantImage; // Image data is now an object
+  notes: PlantNote[]; // Notes on the plant
 }
 
 // Type for the API response
@@ -33,11 +40,4 @@ export interface PlantApiResponse {
   from: number;
   last_page: number;
   total: number;
-}
-
-// Type for notes on a plant
-export interface PlantNote {
-  date: string;
-  note: string;
-  id: string;
 }

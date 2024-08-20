@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Plant {
+  id              Int         @id @default(autoincrement())
+  common_name     String
+  scientific_name String
+  other_name      String?
+  cycle           String
+  watering        String
+  sunlight        String
+  defaultImage    String? // URL or other reference
+  expiresAt       DateTime // Expiry date for caching purposes
+  UserPlants      UserPlant[] // Relation to user plants
+  PlantImage      PlantImage?
+  Note            Note[]
+}
+
+model UserPlant {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  plantId   Int
+  user      User     @relation(fields: [userId], references: [id])
+  plant     Plant    @relation(fields: [plantId], references: [id])
+  notes     Note[]
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id         Int         @id @default(autoincrement())
+  email      String      @unique
+  password   String
+  UserPlants UserPlant[] // Relation to user plants
+}
+
+model PlantImage {
+  id           Int    @id @default(autoincrement())
+  license      Int
+  license_name String
+  license_url  String
+  original_url String
+  regular_url  String
+  medium_url   String
+  small_url    String
+  thumbnail    String
+  plant        Plant  @relation(fields: [plantId], references: [id])
+  plantId      Int    @unique
+}
+
+model Note {
+  id          Int        @id @default(autoincrement())
+  date        DateTime
+  note        String
+  plant       Plant      @relation(fields: [plantId], references: [id])
+  plantId     Int
+  UserPlant   UserPlant? @relation(fields: [userPlantId], references: [id])
+  userPlantId Int?
+}
