@@ -1,5 +1,6 @@
 "use client";
 
+import { addPlant } from "@/actions/actions";
 import { Plant, PlantNote } from "@/lib/types"; // Import the correct types
 import { createContext, useState, useContext } from "react";
 
@@ -60,13 +61,15 @@ export default function PlantContextProvider({
     setSelectedPlantId(id);
   };
 
-  const handleAddPlant = (plant: Plant) => {
+  const handleAddPlant = async (plant: Plant) => {
     setMyPlants((prevMyPlants) => {
       if (!prevMyPlants.some((p) => p.id === plant.id)) {
         return [...prevMyPlants, plant];
       }
       return prevMyPlants;
     });
+
+    await addPlant(plant);
   };
 
   const handleDeletePlant = (id: number) => {
