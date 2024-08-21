@@ -41,3 +41,24 @@ export interface PlantApiResponse {
   last_page: number;
   total: number;
 }
+
+export type UserPlant = {
+  id: number;
+  userId: number;
+  plantId: number;
+  user: User; // Represents the related User object
+  plant: Plant; // Represents the related Plant object
+  notes: PlantNote[]; // Array of related Note objects
+  updatedAt: Date;
+  createdAt: Date;
+};
+
+export type User = {
+  id: number;
+  username: string;
+  email: string;
+  password: string;
+  plants: UserPlant[]; // Array of related UserPlant objects
+  updatedAt: Date;
+  createdAt: Date;
+};
