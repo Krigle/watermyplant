@@ -34,15 +34,3 @@ export default async function layout({
     </>
   );
 }
-
-// import prisma from "@/lib/db"; // Prisma client import
-
-// export async function getServerSideProps() {
-//   const myPlants = await prisma.plant.findMany(); // Fetch all plants from Prisma
-
-//   return {
-//     props: {
-//       myPlants, // Pass the plants to the UI as props
-//     },
-//   };
-// }
