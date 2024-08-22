@@ -2,7 +2,8 @@ import BackgroundPattern from "@/components/background-pattern";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import PlantContextProvider from "@/contexts/plant-context-provider";
 import SearchContextProvider from "@/contexts/search-context-provider";
-import { Plant } from "@/lib/types";
+import prisma from "@/lib/db";
+import { Plant, UserPlant } from "@/lib/types";
 import React from "react";
 
 export default async function layout({

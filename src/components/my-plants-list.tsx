@@ -40,7 +40,9 @@ export default function MyPlantsList() {
                   {plant.common_name || "Unknown Plant"}
                 </span>
                 <span className="block mt-1 text-sm text-gray-600">
-                  {plant.scientific_name.join(", ")}
+                  {Array.isArray(plant.scientific_name)
+                    ? plant.scientific_name.join(", ")
+                    : plant.scientific_name}
                 </span>
               </div>
               <button
