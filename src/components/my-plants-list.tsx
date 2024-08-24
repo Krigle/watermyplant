@@ -22,20 +22,23 @@ export default function MyPlantsList() {
       {myPlants.map((plant) => (
         <li key={plant.id} className="m-1">
           <div className="flex items-center justify-between p-1">
-            <button
-              className={cn("flex items-center w-full text-base gap-3", {
-                "bg-[#9eb9c0]/50": selectedPlantId === plant.id,
-              })}
+            <div
+              className={cn(
+                "flex items-center w-full text-base gap-3 cursor-pointer",
+                {
+                  "bg-[#9eb9c0]/50": selectedPlantId === plant.id,
+                }
+              )}
               onClick={() => handleChangeSelectedPlantId(plant.id)}
             >
               <Image
-                src={plant.default_image.thumbnail}
+                src={plant.default_image?.thumbnail || "/fallback-image.jpg"}
                 alt={plant.common_name || "Plant Image"}
                 width={50}
                 height={50}
                 className="rounded-md"
               />
-              <div className=" flex-grow">
+              <div className="flex-grow">
                 <span className="font-semibold">
                   {plant.common_name || "Unknown Plant"}
                 </span>
@@ -46,12 +49,15 @@ export default function MyPlantsList() {
                 </span>
               </div>
               <button
-                onClick={() => handleDeletePlant(plant.id)}
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent triggering the outer div's onClick
+                  handleDeletePlant(plant.id);
+                }}
                 className="text-red-700 ml-2"
               >
                 <Trash2 />
               </button>
-            </button>
+            </div>
           </div>
         </li>
       ))}

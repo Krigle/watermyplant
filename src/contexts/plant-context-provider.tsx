@@ -6,6 +6,7 @@ import { createContext, useState, useContext } from "react";
 
 type PlantContextProviderProps = {
   data: Plant[];
+  userPlants: Plant[];
   children: React.ReactNode;
 };
 
@@ -31,6 +32,7 @@ export const PlantContext = createContext<TPlantContext | null>(null);
 
 export default function PlantContextProvider({
   data,
+  userPlants,
   children,
 }: PlantContextProviderProps) {
   // Ensure each plant has a notes property
@@ -45,7 +47,7 @@ export default function PlantContextProvider({
 
   // State
   const [selectedPlantId, setSelectedPlantId] = useState<number | null>(null);
-  const [myPlants, setMyPlants] = useState<Plant[]>([]);
+  const [myPlants, setMyPlants] = useState<Plant[]>(userPlants || []);
   const [watered, setWatered] = useState<boolean>(false);
   const [notes, setNotes] = useState<PlantNote[]>([]); // Initialize notes as empty array
   const [isLoading, setIsLoading] = useState<boolean>(false);
