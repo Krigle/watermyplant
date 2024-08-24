@@ -11,6 +11,11 @@ export default async function layout({
 }: {
   children: React.ReactNode;
 }) {
+  // Fetch plants from the Prisma database
+  const userPlants: Plant[] = await prisma.plant.findMany(); // Fetch all plants from the database
+  console.log(userPlants);
+
+  // Fetch plants from API
   const response = await fetch(
     `https://perenual.com/api/species-list?key=sk-oPKM66a4dfb30e7496350 ` as unknown as RequestInfo
   );
@@ -27,7 +32,9 @@ export default async function layout({
       <div className="flex flex-col mx-auto h-[93vh]">
         <MaxWidthWrapper>
           <SearchContextProvider initialData={data}>
-            <PlantContextProvider data={data}>{children}</PlantContextProvider>
+            <PlantContextProvider data={data} userPlants={userPlants}>
+              {children}
+            </PlantContextProvider>
           </SearchContextProvider>
         </MaxWidthWrapper>
       </div>

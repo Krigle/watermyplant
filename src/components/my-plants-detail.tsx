@@ -26,7 +26,11 @@ export default function MyPlantsDetails() {
                 <h2 className="text-3xl font-semibold leading-7 ml-5">
                   {selectedPlant?.common_name}
                 </h2>
-                <p>{selectedPlant?.scientific_name.join(", ")}</p>
+                <p>
+                  {Array.isArray(selectedPlant?.scientific_name)
+                    ? selectedPlant?.scientific_name.join(", ")
+                    : selectedPlant?.scientific_name}
+                </p>
               </div>
               <div className="flex flex-col items-end">
                 <button onClick={toggleWatered}>
@@ -98,7 +102,11 @@ export default function MyPlantsDetails() {
             {/* <div>Post pictures / Feed Component</div> */}
           </section>
         </section>
-      ) : null}
+      ) : (
+        <div className="flex items-center justify-center h-full">
+          <h2 className="text-2xl">Choose a plant...</h2>
+        </div>
+      )}
     </>
   );
 }
